@@ -15,6 +15,23 @@ interface StreamState {
   youtubeVideoId: string;
 }
 
+// eslint-disable-next-line max-len
+async function getYoutubeChannelID(channelName: string): Promise<{ channelID: string, liveID: string }> {
+  const req = new XMLHttpRequest();
+  return new Promise((res, rej) => {
+    req.open(
+      'GET',
+      `http://localhost:3000/?name=${channelName}`,
+      true,
+    );
+    req.send();
+    req.addEventListener('load', () => {
+      res(JSON.parse(req.responseText));
+    });
+    req.onerror = rej;
+  });
+}
+
 export default class Stream extends React.Component<StreamProps, StreamState> {
   twitchBox: string = '';
 
@@ -43,13 +60,15 @@ export default class Stream extends React.Component<StreamProps, StreamState> {
     this.youtubeBox = event.target.value;
   }
 
-  handleSubmit(event: any) {
+  async handleSubmit(event: any) {
+    event.preventDefault();
+    const IDs = await getYoutubeChannelID(this.youtubeBox);
+
     this.setState({
       twitchChannel: this.twitchBox,
-      youtubeChannel: this.youtubeBox,
+      youtubeChannel: IDs.channelID,
+      youtubeVideoId: IDs.liveID,
     });
-
-    event.preventDefault();
   }
 
   render() {
