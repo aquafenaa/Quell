@@ -10,10 +10,7 @@
 
 # production
 /build
-/src/server/*.js
-
-dev.bat
-.env
+/src/*.js
 
 # misc
 .DS_Store

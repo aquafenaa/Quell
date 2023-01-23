@@ -11,12 +11,11 @@ interface StreamProps {
 
 interface StreamState {
   twitchChannel: string;
-  youtubeChannel: string;
   youtubeVideoId: string;
 }
 
 // eslint-disable-next-line max-len
-async function getYoutubeChannelID(channelName: string): Promise<{ channelID: string, liveID: string }> {
+async function getYoutubeChannelID(channelName: string): Promise<string> {
   const req = new XMLHttpRequest();
   return new Promise((res, rej) => {
     req.open(
@@ -26,7 +25,7 @@ async function getYoutubeChannelID(channelName: string): Promise<{ channelID: st
     );
     req.send();
     req.addEventListener('load', () => {
-      res(JSON.parse(req.responseText));
+      res(req.responseText);
     });
     req.onerror = rej;
   });
@@ -39,11 +38,18 @@ export default class Stream extends React.Component<StreamProps, StreamState> {
 
   constructor(props: StreamProps) {
     super(props);
+
     this.state = {
       twitchChannel: props.twitchChannel,
-      youtubeChannel: props.youtubeChannel,
       youtubeVideoId: '',
     };
+
+    getYoutubeChannelID(props.youtubeChannel).then((res: string) => {
+      this.state = {
+        twitchChannel: props.twitchChannel,
+        youtubeVideoId: res,
+      };
+    });
 
     this.handleTwitchChange = this.handleTwitchChange.bind(this);
     this.handleYouTubeChange = this.handleYouTubeChange.bind(this);
@@ -60,17 +66,15 @@ export default class Stream extends React.Component<StreamProps, StreamState> {
 
   async handleSubmit(event: any) {
     event.preventDefault();
-    const IDs = await getYoutubeChannelID(this.youtubeBox);
-
+    const videoID = await getYoutubeChannelID(this.youtubeBox);
     this.setState({
       twitchChannel: this.twitchBox,
-      youtubeChannel: IDs.channelID,
-      youtubeVideoId: IDs.liveID,
+      youtubeVideoId: videoID,
     });
   }
 
   render() {
-    const { twitchChannel, youtubeChannel, youtubeVideoId } = this.state;
+    const { twitchChannel, youtubeVideoId } = this.state;
     return (
       <div>
         <form>
@@ -85,7 +89,7 @@ export default class Stream extends React.Component<StreamProps, StreamState> {
           <input type="submit" value="Submit" onClick={this.handleSubmit} />
         </form>
         <TwitchEmbed channel={twitchChannel} autoplay withChat darkMode height={700} width="100%" />
-        <iframe width="560" height="315" src={`https://www.youtube.com/embed/live_stream?channel=${youtubeChannel}`} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;" allowFullScreen />
+        <iframe width="560" height="315" src={`https://www.youtube.com/embed/${youtubeVideoId}`} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;" allowFullScreen />
         <iframe width="560" height="315" src={`https://www.youtube.com/live_chat?v=${youtubeVideoId}&embed_domain=localhost`} title="YouTube chat" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
       </div>
 
