@@ -7,8 +7,8 @@ Link to the server files [here](https://github.com/BazTeeVee/QuellServer).
 
 TODO:
 - [x] Figure out IP fuckery
+- [x] Split GitHub repo into two separate branches: Website, and Server
 - [ ] Prettify the UI
 - [ ] Add a hamburger button for the menu
 - [ ] Make the YouTube embed and the Live Chat embed go to the same place
 - [ ] Make a loading circle when getting the stream IDs
-- [ ] Split GitHub repo into two separate branches: Website, and Server
