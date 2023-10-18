@@ -1,0 +1,153 @@
+.add_stream_menu {
+  
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 20fr);
+
+  /* border: 2px solid rgb(71, 71, 125);
+  border-radius: 7px; */
+}
+
+.stream_box {
+  height: 40vh;
+  width: 20vw;
+  border: 2px solid rgb(71, 71, 125);
+  border-radius: 7px;
+  padding: 10px;
+  margin: 5px;
+  position: relative;
+}
+
+.stream_input_box {
+  width: 40%;
+  position: relative;
+}
+
+#title {
+  font-size: 16pt;
+  font-weight: 700;
+  margin: 0;
+  margin-bottom: 5px;
+  padding-bottom: 3.5px;
+  transition: .4s;
+  width: 100%;
+
+  border-bottom: #6441a5 2px solid;
+}
+
+.stream_input {
+  width: 100%;
+  background-color: rgb(20, 20, 20);
+
+  margin-top: 1vh;
+  border: 2px solid rgb(71, 71, 125);
+  border-radius: 2px;
+  box-sizing: content-box;
+}
+
+.stream_input:focus {
+  /* outline: none; */ 
+  border-color: #6441a5;
+  outline: 2px solid #6441a5;
+}
+
+.selector {
+  display: inline-flex;
+  flex-direction: row;
+  position: absolute;
+  justify-content: center;
+  
+  left: 10px;
+  bottom: 0;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+  
+  margin: 10px;
+  top: 2px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.logo {
+  position: relative;
+  top: 7px;
+}
+
+.exit {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  transform: translate(0, -50%);
+  font-size: 20px;
+  margin: 13px 5px;
+}
+
+.button {
+  color: #b9b0b0;
+}
+
+.button:hover {
+  cursor: pointer;
+}
+
+.add_stream {
+  position: relative;
+
+  margin: 0;
+
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add_stream:hover {
+  cursor: pointer;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FF0000; /* youtube logo colour */
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #6441a5; /* twitch logo colour */ 
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(13px);
+  -ms-transform: translateX(13px);
+  transform: translateX(13px);
+}

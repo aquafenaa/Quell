@@ -1,0 +1,22 @@
+#home_page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#title {
+  font-size: 75px;
+  font-weight: 700;
+  margin: 5vh 0;
+}
+
+#description {
+  position: relative;
+  top: -2.5vh;
+  font-size: 14pt;
+  font-weight: 400;
+  width: 45vw;
+  text-align: center;
+  margin-bottom: 5vh;
+}

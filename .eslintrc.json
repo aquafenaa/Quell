@@ -14,5 +14,8 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "react/jsx-no-bind": "off",
+    "max-len": "off",
+    "no-plusplus": "off"
   }
 }

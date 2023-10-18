@@ -1,39 +1,49 @@
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import { TwitchEmbed } from 'react-twitch-embed';
-
-import AddStream from '../components/AddStream';
 
 const IP = '150.136.140.99';
 const PORT = '8080';
 
 export default function Stream() {
   const router = useRouter();
-  const { twitchChannel, youtubeSearch } = router.query;
+  const { twitchChannels, youtubeSearches } = router.query;
 
-  const [youtubeVideoID, setData] = React.useState('');
+  const [twitchStreams, setTwitchChannels] = React.useState<string[]>([]);
+  const [youtubeStreams, setYoutubeChannels] = React.useState<string[]>([]);
 
   useEffect(() => {
-    const callData = async () => {
-      if (router.isReady) {
-        const data = (await fetch(`http://${IP}:${PORT}/?name=${youtubeSearch}`).then((ID) => ID.json())).body;
-        setData(data);
-      }
-    };
+    if (router.isReady) {
+      const callData = async () => {
+        if (twitchChannels) {
+          const arr = typeof twitchChannels === 'string' ? [twitchChannels] : twitchChannels;
+          setTwitchChannels(arr);
+        }
+        // we want to get the youtube channel ID, and not the actual channel name for the embed
+        if (youtubeSearches) {
+          const arr = typeof youtubeSearches === 'string' ? [youtubeSearches.replace(' ', '%20')]
+            : youtubeSearches.map((search: string) => search.replace(' ', '%20'));
+          const getID = async (names: string[]) => (await fetch(`http://${IP}:${PORT}/?name=${names.join(',_,')}`)).json();
+          const response = (await getID(arr)).channels;
 
-    callData();
+          setYoutubeChannels(await Promise.all(response));
+        }
+      };
+      callData();
+    }
   }, [router.isReady]);
 
-  if (youtubeVideoID === '') {
+  if (youtubeSearches && (!youtubeStreams || youtubeStreams.length === 0)) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div>
-      <AddStream />
-      <TwitchEmbed channel={twitchChannel as string} autoplay withChat darkMode height={700} width="100%" />
-      <iframe width="560" height="315" src={`https://www.youtube.com/embed/${youtubeVideoID as string}`} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;" allowFullScreen />
-      <iframe width="560" height="315" src={`https://www.youtube.com/live_chat?v=${youtubeVideoID as string}&embed_domain=localhost`} title="YouTube chat" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+    <div className="streamSources">
+      {twitchStreams.map((twitchChannel) => (
+        <iframe className="stream twitch" width="49.5%" height="500rem" title={twitchChannel} src={`https://player.twitch.tv/?channel=${twitchChannel}&parent=localhost`} />
+      ))}
+      {youtubeStreams.map((youtubeStream) => (
+        <iframe className="stream youtube" width="50%" height="500rem" src={`https://www.youtube.com/embed/${youtubeStream}`} title="YouTube video player" allowFullScreen />
+      ))}
     </div>
   );
 }
